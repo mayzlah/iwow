@@ -1,34 +1,45 @@
 import java.io.*;
 import java.net.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 class iWOW
 {
-	public static void main(String args[])
-	{
-		try
-		{
-			byte buf[] = new byte[64*1024];
-			String host = "eu.battle.net";
-			String request = "GET /api/wow/character/rexxar/mon?fields=items";
-			int port = 80;
-			Socket s_wow = new Socket(host, port);
-			request = request+"\nHost: "+host+"\n\n";
-			System.out.println(request);
-			System.out.println(request.getBytes());
-			s_wow.getOutputStream().write(request.getBytes());
-			InputStream g_wow = s_wow.getInputStream();
-			FileOutputStream r_wow = new FileOutputStream("result.txt");
-			int r_res = 1;
-			while (r_res > 0)
-			{
-				r_res = g_wow.read(buf);
-				if(r_res > 0)
-					r_wow.write(buf, 0, r_res);
-			}
-			r_wow.close();
-			s_wow.close();			
-		}
-	catch(Exception e)
-        {e.printStackTrace();}
-	}
+    public static void main(String args[])
+    {
+        try
+        {
+            String Host = new String("http://eu.battle.net");
+            String Realm = new String("Rexxar");
+            String Character = new String("Mon");
+            String Parameters = new String("fields=items");
+            URL RequestURL = new URL(Host + "/api/wow/character/" + Realm + "/" + Character + "?" + Parameters);
+
+            HttpURLConnection httpCon = (HttpURLConnection) RequestURL.openConnection();
+            httpCon.setRequestMethod("GET");
+
+            httpCon.setReadTimeout(15*1000);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
+            StringBuilder stringBuilder = new StringBuilder();
+
+            String line = null;
+
+            while ((line = reader.readLine()) != null)
+            {
+                stringBuilder.append(line);
+            }
+
+            JSONParser parser = new JSONParser();
+            JSONObject myJSON = (JSONObject) parser.parse(stringBuilder.toString());
+            myJSON = (JSONObject) myJSON.get("items");
+            System.out.println(myJSON.get("averageItemLevel").toString());
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 }

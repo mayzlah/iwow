@@ -6,3 +6,6 @@
 5) Протестировать и исправить оставшиеся ошибки.
 6) Радоваться.
 Примечание – периодически постить прогресс на GitHub вместе с этим планом, отмечать в плане прогресс выполнения задачи.
+
+http://www.javaportal.ru/java/articles/java_http_web/article04.html
+http://blizzard.github.com/api-wow-docs/

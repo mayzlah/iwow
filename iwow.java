@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.lang.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,10 +12,20 @@ class iWOW
         try
         {
             String Host = new String("http://eu.battle.net");
-            String Realm = new String("Rexxar");
-            String Character = new String("Mon");
-            String Parameters = new String("fields=items");
-            URL RequestURL = new URL(Host + "/api/wow/character/" + Realm + "/" + Character + "?" + Parameters);
+			String Realm = new String("Пиратская бухта");
+            String Character = new String("Вотхернейм");
+			if (args[0] != null)
+			{
+				Character = args[0];
+			}
+			if (args[1] != null)
+			{
+				Realm = args[1];
+			}
+            String Parameters = new String("fields=items,progression,stats");
+			String Request = new String(Host + "/api/wow/character/" + Realm + "/" + Character + "?" + Parameters);
+			URI requestURI = new URI(Request);
+            URL RequestURL = requestURI.toURL();
 
             HttpURLConnection httpCon = (HttpURLConnection) RequestURL.openConnection();
             httpCon.setRequestMethod("GET");
@@ -33,9 +44,26 @@ class iWOW
 
             JSONParser parser = new JSONParser();
             JSONObject myJSON = (JSONObject) parser.parse(stringBuilder.toString());
-            myJSON = (JSONObject) myJSON.get("items");
-            System.out.println(myJSON.get("averageItemLevel").toString());
-
+            JSONObject ItemJSON = (JSONObject) myJSON.get("items");
+            System.out.println("Averege Item Lvl: " + ItemJSON.get("averageItemLevel").toString());
+			System.out.println("Equipped Item Lvl: " + ItemJSON.get("averageItemLevelEquipped").toString());
+			JSONObject ResJSON = (JSONObject) myJSON.get("stats");
+			System.out.println("Resilance on equipment: " + ResJSON.get("resil"));
+			JSONObject ProgJSON = (JSONObject) myJSON.get("stats");
+			System.out.println("Resilance on equipment: " + ResJSON.get("resil"));
+			JSONObject progJSON = (JSONObject) myJSON.get("progression");
+			JSONArray arrProg = (JSONArrey) progJSON.get("raids");
+			int counter = 0;
+			for (counter = 0; counter < arrProg.length(); counter++)
+			{
+				progJSON = arrProg.getJSONObject(counter);
+				if( progJSON.get("name") == "Dragon Soul")
+				{
+					break;
+				}
+			}
+			System.out.println("Normal cont progress: " + progJSON.get("normal"));
+			System.out.println("Heroic cont progress: " + progJSON.get("heroic"));
         }
         catch(Exception e)
         {

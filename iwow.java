@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.lang.*;
+import java.util.Iterator;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -53,14 +54,15 @@ class iWOW
       System.out.println("Resilance on equipment: " + ResJSON.get("resil"));
       JSONObject progJSON = (JSONObject) myJSON.get("progression");
       JSONArray arrProg = (JSONArray) progJSON.get("raids");
-      int counter = 0;
-      for (counter = 0; counter < arrProg.length(); counter++)
+      Iterator<JSONObject> arrIter = arrProg.iterator();
+      ProgJSON = (JSONObject) arrProg.get(0);
+      while(arrIter.hasNext())
       {
-        progJSON = arrProg.getJSONObject(counter);
-        if( progJSON.get("name") == "Dragon Soul")
+        if(ProgJSON.get("name") == "Dragon Soul")
         {
           break;
         }
+        ProgJSON = (JSONObject) arrIter.next();
       }
       System.out.println("Normal cont progress: " + progJSON.get("normal"));
       System.out.println("Heroic cont progress: " + progJSON.get("heroic"));

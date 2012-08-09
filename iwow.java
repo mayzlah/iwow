@@ -52,7 +52,7 @@ class iWOW
 			JSONObject ProgJSON = (JSONObject) myJSON.get("stats");
 			System.out.println("Resilance on equipment: " + ResJSON.get("resil"));
 			JSONObject progJSON = (JSONObject) myJSON.get("progression");
-			JSONArray arrProg = (JSONArrey) progJSON.get("raids");
+			JSONArray arrProg = (JSONArray) progJSON.get("raids");
 			int counter = 0;
 			for (counter = 0; counter < arrProg.length(); counter++)
 			{
